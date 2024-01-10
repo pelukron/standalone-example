@@ -14,7 +14,7 @@ import { Component } from '@angular/core';
     <nav>
       <div>
         <a [routerLink]="['/']"><img class="logo" src="assets/dog-walker-logo.svg"></a>
-        <h1 class="title">Walk My Dog</h1>
+        <h1 class="title">{{ title }}</h1>
       </div>
     </nav>
     <router-outlet></router-outlet>
@@ -26,7 +26,7 @@ import { Component } from '@angular/core';
       justify-content: space-between;
       margin: 20px 10px 10px 10px;
     }
-    
+
     nav div.menu-items {
       display: flex;
       width: 10%;
