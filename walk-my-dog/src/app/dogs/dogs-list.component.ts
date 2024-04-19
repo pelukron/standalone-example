@@ -23,9 +23,14 @@ import { DogsListCardComponent } from './dogs-list-card.component';
     </section>
     <input type="text" placeholder="Filter by dog name" #filter>
     <button class="primary" type="button" (click)="filterResults(filter)">Search</button>
-    <article class="pet-list">
-      <app-dogs-list-card *ngFor="let dog of dogsService.dogs; let i = index" [index]="i" [dog]="dog" />
+    <article class="pet-list" *ngIf="dogsService.filterList$ | async as filterList; else showDefaultState">
+      <app-dogs-list-card *ngFor="let dog of filterList; let i = index" [index]="i" [dog]="dog" />
     </article>
+    <ng-template #showDefaultState>
+      <article class="pet-list">
+        <app-dogs-list-card *ngFor="let dog of dogsService.dogs; let i = index" [index]="i" [dog]="dog" />
+      </article>
+    </ng-template>
 `,
   styles: [`
   .pet-list {
@@ -46,8 +51,6 @@ export class DogsListComponent implements OnInit {
   constructor(readonly dogsService: DogsService) { }
 
   ngOnInit(): void {
-    this.dogsService.dogName$.subscribe(console.log);
-    this.dogsService.filterList$.subscribe(console.log);
   }
 
 

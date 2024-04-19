@@ -87,10 +87,10 @@ export class DogsService {
   );
 
   public filterList$ = combineLatest([this.dogs$, this.dogName$]).pipe(
-    map(([dogs, dogName]) => 
-      dogs.find(dog => dog.name.search(dogName))
-    ),
-    filter(Boolean)
+    map(([dogs, dogName]) => {
+      const dog = dogs.find(dog => dog.name.search(dogName));
+      return dog ? [dog] : []
+    })
   );
 
   public filterDog(dogName: string): void {
