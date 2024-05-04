@@ -7,7 +7,6 @@ export interface Dog {
     location: string;
 }
 
-
 export const DOGS: Dog[] = [
     {
         name: 'Robbie',
@@ -65,4 +64,4 @@ export const DOGS: Dog[] = [
         photoUrl: '/assets/pexels-steshka-willems-1390361.jpg',
         location: 'Detroit, MI',
     },
-] as const;
+];
