@@ -10,6 +10,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DogsService } from './dogs.service';
 import { DogsListCardComponent } from './dogs-list-card.component';
+import { DOGS } from './dog.model';
 
 @Component({
   selector: 'app-dogs-list',
@@ -21,9 +22,16 @@ import { DogsListCardComponent } from './dogs-list-card.component';
         Discover Pets to walk near you
       </h2>
     </section>
-    <article class="pet-list">
-      <app-dogs-list-card *ngFor="let dog of dogsService.dogs; let i = index" [index]="i" [dog]="dog"></app-dogs-list-card>
+    <input type="text" placeholder="Filter by dog name" #filter>
+    <button class="primary" type="button" (click)="filterResults(filter)">Search</button>
+    <article class="pet-list" *ngIf="dogsService.filterList$ | async as filterList; else showDefaultState">
+      <app-dogs-list-card *ngFor="let dog of filterList; let i = index" [index]="i" [dog]="dog" />
     </article>
+    <ng-template #showDefaultState>
+      <article class="pet-list">
+        <app-dogs-list-card *ngFor="let dog of defaultDogList; let i = index" [index]="i" [dog]="dog" />
+      </article>
+    </ng-template>
 `,
   styles: [`
   .pet-list {
@@ -41,9 +49,16 @@ import { DogsListCardComponent } from './dogs-list-card.component';
 })
 export class DogsListComponent implements OnInit {
 
+  readonly defaultDogList = DOGS;
+
   constructor(readonly dogsService: DogsService) { }
 
   ngOnInit(): void {
+  }
+
+
+  filterResults(filter: HTMLInputElement): void {
+    this.dogsService.filterDog(filter.value);
   }
 
 }
