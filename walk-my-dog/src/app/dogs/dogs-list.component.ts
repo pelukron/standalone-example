@@ -10,6 +10,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DogsService } from './dogs.service';
 import { DogsListCardComponent } from './dogs-list-card.component';
+import { DOGS } from './dog.model';
 
 @Component({
   selector: 'app-dogs-list',
@@ -28,7 +29,7 @@ import { DogsListCardComponent } from './dogs-list-card.component';
     </article>
     <ng-template #showDefaultState>
       <article class="pet-list">
-        <app-dogs-list-card *ngFor="let dog of dogsService.dogs; let i = index" [index]="i" [dog]="dog" />
+        <app-dogs-list-card *ngFor="let dog of defaultDogList; let i = index" [index]="i" [dog]="dog" />
       </article>
     </ng-template>
 `,
@@ -47,6 +48,8 @@ import { DogsListCardComponent } from './dogs-list-card.component';
 `]
 })
 export class DogsListComponent implements OnInit {
+
+  readonly defaultDogList = DOGS;
 
   constructor(readonly dogsService: DogsService) { }
 
