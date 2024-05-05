@@ -6,11 +6,12 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, Signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+
 import { DogsService } from './dogs.service';
 import { DogsListCardComponent } from './dogs-list-card.component';
-import { DOGS } from './dog.model';
+import { count } from 'rxjs';
 
 @Component({
   selector: 'app-dogs-list',
@@ -24,15 +25,22 @@ import { DOGS } from './dog.model';
     </section>
     <input type="text" placeholder="Filter by dog name" #filter>
     <button class="primary" type="button" (click)="filterResults(filter)">Search</button>
-    <article class="pet-list" *ngIf="dogsService.filterList$ | async as filterList; else showDefaultState">
-      <app-dogs-list-card *ngFor="let dog of filterList; let i = index" [index]="i" [dog]="dog" />
+    <article class="pet-list" 
+      *ngIf="dogsService.filterList().length > 0; else showDefaultState">
+        <app-dogs-list-card 
+          *ngFor="let dog of dogsService.filterList(); let i = index" 
+          [index]="i" 
+          [dog]="dog" />
     </article>
     <ng-template #showDefaultState>
       <article class="pet-list">
-        <app-dogs-list-card *ngFor="let dog of defaultDogList; let i = index" [index]="i" [dog]="dog" />
+        <app-dogs-list-card 
+          *ngFor="let dog of dogsService.dogsList(); let i = index" 
+          [index]="i" 
+          [dog]="dog" />
       </article>
-    </ng-template>
-`,
+    </ng-template>`
+  ,
   styles: [`
   .pet-list {
     display: flex;
@@ -47,17 +55,15 @@ import { DOGS } from './dog.model';
   }
 `]
 })
-export class DogsListComponent implements OnInit {
+export class DogsListComponent {
 
-  readonly defaultDogList = DOGS;
-
-  constructor(readonly dogsService: DogsService) { }
-
-  ngOnInit(): void {
+  protected dogsService: DogsService = inject(DogsService);
+  constructor() {
+    console.log(this.dogsService.filterList(), 'filterList')
+    console.log(this.dogsService.dogsList(), 'dogsList')
   }
 
-
-  filterResults(filter: HTMLInputElement): void {
+  public filterResults(filter: HTMLInputElement): void {
     this.dogsService.filterDog(filter.value);
   }
 
